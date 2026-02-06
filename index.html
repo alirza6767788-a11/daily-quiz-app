@@ -4,13 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Daily Quiz Reward</title>
-    
-    <!-- Telegram Web App SDK -->
+
+    <!-- Telegram Mini App SDK -->
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
-    
-    <!-- Monetag SDK Tag (dashboard se copy kiya hua exact tag yahan daal, agar src alag hai to change kar) -->
-    <script async src="https://js.monetag.com/sdk.js" 
-            data-zone="10576545" 
+
+    <!-- ✅ Monetag Rewarded Ad SDK (Telegram-safe) -->
+    <script src="https://cdn.monetag.com/vignette.min.js"
+            data-zone="10576545"
             data-sdk="show_10576545"></script>
 
     <style>
@@ -25,8 +25,8 @@
             color: #0088cc;
         }
         button {
-            padding: 15px 30px;
-            font-size: 18px;
+            padding: 14px 28px;
+            font-size: 17px;
             margin: 10px;
             background: #0088cc;
             color: white;
@@ -35,58 +35,55 @@
             cursor: pointer;
         }
         #coins {
-            font-size: 24px;
+            font-size: 22px;
             color: #333;
         }
     </style>
 </head>
+
 <body>
-    <h1>Welcome to Daily Quiz!</h1>
-    <p>Solve daily questions & earn coins by watching ads!</p>
+    <h1>Daily Quiz</h1>
+    <p>Watch ads & earn coins 🎁</p>
 
     <button onclick="startQuiz()">Start Quiz</button>
-    <button onclick="showRewardedAd()">Watch Ad & Get +50 Coins</button>
+    <button onclick="watchAd()">Watch Ad +50 Coins</button>
 
     <p id="coins">Your Coins: 0</p>
 
     <script>
         let coins = 0;
 
-        // Telegram Mini App init
-        Telegram.WebApp.ready();
-        Telegram.WebApp.expand();
+        // ✅ Telegram Mini App init
+        const tg = Telegram.WebApp;
+        tg.ready();
+        tg.expand();
 
         function updateCoins() {
-            document.getElementById('coins').innerText = 'Your Coins: ' + coins;
+            document.getElementById("coins").innerText =
+                "Your Coins: " + coins;
         }
 
         function startQuiz() {
-            alert("Quiz starting! (More questions coming soon)");
+            tg.showAlert("Quiz coming soon!");
             coins += 10;
             updateCoins();
         }
 
-        // Monetag Rewarded Interstitial function (zone ID 10576545 se)
-        function showRewardedAd() {
-            if (typeof show_10576545 === 'function') {
-                show_10576545()
-                    .then(() => {
-                        // Ad successfully watched
-                        coins += 50;
-                        updateCoins();
-                        alert("Ad watched successfully! +50 Coins added! 💰");
-                    })
-                    .catch(() => {
-                        // Ad skipped, closed, or error
-                        alert("Ad was skipped or closed. No reward this time.");
-                    });
-            } else {
-                // SDK not loaded yet
-                alert("Ad SDK is loading... Please wait a few seconds and try again.");
+        // ✅ Telegram-safe rewarded ad
+        function watchAd() {
+            if (typeof show_10576545 !== "function") {
+                tg.showAlert("Ad is loading, try again in a few seconds.");
+                return;
             }
+
+            show_10576545().then(() => {
+                // 🎁 reward AFTER full ad
+                coins += 50;
+                updateCoins();
+                tg.showAlert("Reward added! +50 Coins 💰");
+            });
         }
 
-        // Initial coins display
         updateCoins();
     </script>
 </body>
