@@ -8,7 +8,7 @@
     <!-- Telegram Mini App SDK -->
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
 
-    <!-- ✅ Monetag Rewarded Ad SDK (Telegram-safe) -->
+    <!-- Monetag Rewarded Ad SDK -->
     <script src="https://cdn.monetag.com/vignette.min.js"
             data-zone="10576545"
             data-sdk="show_10576545"></script>
@@ -46,41 +46,70 @@
     <p>Watch ads & earn coins 🎁</p>
 
     <button onclick="startQuiz()">Start Quiz</button>
-    <button onclick="watchAd()">Watch Ad +50 Coins</button>
+    <button onclick="watchInterstitialAd()">Watch Interstitial Ad +50 Coins</button>
+    <button onclick="watchPopupAd()">Watch Popup Ad +50 Coins</button>
 
     <p id="coins">Your Coins: 0</p>
 
     <script>
         let coins = 0;
 
-        // ✅ Telegram Mini App init
+        // Telegram Mini App init
         const tg = Telegram.WebApp;
         tg.ready();
         tg.expand();
 
+        // Coins update function
         function updateCoins() {
-            document.getElementById("coins").innerText =
-                "Your Coins: " + coins;
+            document.getElementById("coins").innerText = "Your Coins: " + coins;
         }
 
+        // Start Quiz
         function startQuiz() {
             tg.showAlert("Quiz coming soon!");
             coins += 10;
             updateCoins();
         }
 
-        // ✅ Telegram-safe rewarded ad
-        function watchAd() {
-            if (typeof show_10576545 !== "function") {
-                tg.showAlert("Ad is loading, try again in a few seconds.");
+        // Monetag SDK ready check
+        let adReady = false;
+        const adCheck = setInterval(() => {
+            if (typeof show_10576545 === "function") {
+                adReady = true;
+                clearInterval(adCheck);
+                console.log("Monetag Ad Ready");
+            }
+        }, 1000);
+
+        // Interstitial ad (regular rewarded)
+        function watchInterstitialAd() {
+            if (!adReady) {
+                tg.showAlert("Ad is loading… wait 5–10 seconds and try again.");
                 return;
             }
 
             show_10576545().then(() => {
-                // 🎁 reward AFTER full ad
                 coins += 50;
                 updateCoins();
                 tg.showAlert("Reward added! +50 Coins 💰");
+            }).catch(() => {
+                tg.showAlert("Ad was skipped or error occurred. No reward.");
+            });
+        }
+
+        // Popup ad (pop rewarded)
+        function watchPopupAd() {
+            if (!adReady) {
+                tg.showAlert("Ad is loading… wait 5–10 seconds and try again.");
+                return;
+            }
+
+            show_10576545('pop').then(() => {
+                coins += 50;
+                updateCoins();
+                tg.showAlert("Popup Ad watched! +50 Coins 💰");
+            }).catch(() => {
+                tg.showAlert("Popup Ad closed or error occurred. No reward.");
             });
         }
 
