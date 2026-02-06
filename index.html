@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Daily Quiz Reward</title>
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <style>
+    body { font-family: Arial, sans-serif; text-align: center; background: #f0f8ff; padding: 20px; margin: 0; }
+    h1 { color: #0088cc; }
+    button { padding: 15px 30px; font-size: 18px; margin: 10px; background: #0088cc; color: white; border: none; border-radius: 10px; }
+    #coins { font-size: 24px; color: #333; }
+  </style>
+</head>
+<body>
+  <h1>Welcome to Daily Quiz!</h1>
+  <p>Solve daily questions & earn coins by watching ads!</p>
+  
+  <button onclick="startQuiz()">Start Quiz</button>
+  <button onclick="showAd()">Watch Ad for +50 Coins</button>
+  
+  <p id="coins">Your Coins: 0</p>
+
+  <script>
+    let coins = 0;
+    function startQuiz() {
+      alert("Quiz starting! (More questions coming soon)");
+      coins += 10;
+      updateCoins();
+    }
+    function showAd() {
+      alert("Ad playing... +50 coins added!");
+      coins += 50;
+      updateCoins();
+    }
+    function updateCoins() {
+      document.getElementById('coins').innerText = 'Your Coins: ' + coins;
+    }
+  </script>
+</body>
+</html>
