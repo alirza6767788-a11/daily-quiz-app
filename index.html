@@ -1,94 +1,93 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Daily Quiz Reward</title>
-  <script src="https://telegram.org/js/telegram-web-app.js"></script>
-  <script async src="https://js.monetag.com/sdk.js" data-zone="10576545" data-sdk="show_10576545"></script>
-  <style>
-    body { font-family: Arial, sans-serif; text-align: center; background: #f0f8ff; padding: 20px; margin: 0; }
-    h1 { color: #0088cc; }
-    button { padding: 15px 30px; font-size: 18px; margin: 10px; background: #0088cc; color: white; border: none; border-radius: 10px; }
-    #coins { font-size: 24px; color: #333; }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daily Quiz Reward</title>
+    
+    <!-- Telegram Web App SDK -->
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    
+    <!-- Monetag SDK Tag (dashboard se copy kiya hua exact tag yahan daal, agar src alag hai to change kar) -->
+    <script async src="https://js.monetag.com/sdk.js" 
+            data-zone="10576545" 
+            data-sdk="show_10576545"></script>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background: #f0f8ff;
+            padding: 20px;
+            margin: 0;
+        }
+        h1 {
+            color: #0088cc;
+        }
+        button {
+            padding: 15px 30px;
+            font-size: 18px;
+            margin: 10px;
+            background: #0088cc;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+        }
+        #coins {
+            font-size: 24px;
+            color: #333;
+        }
+    </style>
 </head>
 <body>
-  <h1>Welcome to Daily Quiz!</h1>
-  <p>Solve daily questions & earn coins by watching ads!</p>
-  
-  <button onclick="startQuiz()">Start Quiz</button>
-  <button onclick="showAd()">Watch Ad for +50 Coins</button>
-  
-  <p id="coins">Your Coins: 0</p>
-<script>
-    let coins = 0;
+    <h1>Welcome to Daily Quiz!</h1>
+    <p>Solve daily questions & earn coins by watching ads!</p>
 
-    // Telegram Mini App init
-    Telegram.WebApp.ready();
-    Telegram.WebApp.expand();
+    <button onclick="startQuiz()">Start Quiz</button>
+    <button onclick="showRewardedAd()">Watch Ad & Get +50 Coins</button>
 
-    function updateCoins() {
-        document.getElementById('coins').innerText = 'Your Coins: ' + coins;
-    }
+    <p id="coins">Your Coins: 0</p>
 
-    function startQuiz() {
-        alert("Quiz starting! (More questions coming soon)");
-        coins += 10;
-        updateCoins();
-    }
+    <script>
+        let coins = 0;
 
-    // Monetag Rewarded Ad function
-    function showRewardedAd() {
-        if (typeof show_10576545 === 'function') {
-            show_10576545()
-                .then(() => {
-                    coins += 50;
-                    updateCoins();
-                    alert("Ad watched! +50 Coins added! 💰");
-                })
-                .catch(() => {
-                    alert("Ad skipped or closed. No reward this time.");
-                });
-        } else {
-            alert("Ad is loading... Please wait a few seconds and try again.");
+        // Telegram Mini App init
+        Telegram.WebApp.ready();
+        Telegram.WebApp.expand();
+
+        function updateCoins() {
+            document.getElementById('coins').innerText = 'Your Coins: ' + coins;
         }
-    }
 
-    updateCoins(); // Show coins on page load
-<script>
-    let coins = 0;
-
-    Telegram.WebApp.ready();
-    Telegram.WebApp.expand();
-
-    function updateCoins() {
-        document.getElementById('coins').innerText = 'Your Coins: ' + coins;
-    }
-
-    function startQuiz() {
-        alert("Quiz starting! (More questions coming soon)");
-        coins += 10;
-        updateCoins();
-    }
-
-    function showRewardedAd() {
-        if (typeof show_10576545 === 'function') {
-            show_10576545()
-                .then(() => {
-                    coins += 50;
-                    updateCoins();
-                    alert("Ad watched! +50 Coins added! 💰");
-                })
-                .catch(() => {
-                    alert("Ad skipped or closed. No reward this time.");
-                });
-        } else {
-            alert("SDK loading... Try again in 10 seconds.");
+        function startQuiz() {
+            alert("Quiz starting! (More questions coming soon)");
+            coins += 10;
+            updateCoins();
         }
-    }
 
-    updateCoins();
-</script>
+        // Monetag Rewarded Interstitial function (zone ID 10576545 se)
+        function showRewardedAd() {
+            if (typeof show_10576545 === 'function') {
+                show_10576545()
+                    .then(() => {
+                        // Ad successfully watched
+                        coins += 50;
+                        updateCoins();
+                        alert("Ad watched successfully! +50 Coins added! 💰");
+                    })
+                    .catch(() => {
+                        // Ad skipped, closed, or error
+                        alert("Ad was skipped or closed. No reward this time.");
+                    });
+            } else {
+                // SDK not loaded yet
+                alert("Ad SDK is loading... Please wait a few seconds and try again.");
+            }
+        }
+
+        // Initial coins display
+        updateCoins();
+    </script>
 </body>
 </html>
