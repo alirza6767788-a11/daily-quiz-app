@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Daily Quiz Reward</title>
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <script async src="https://js.monetag.com/sdk.js" data-zone="10576545" data-sdk="show_10576545"></script>
   <style>
     body { font-family: Arial, sans-serif; text-align: center; background: #f0f8ff; padding: 20px; margin: 0; }
     h1 { color: #0088cc; }
@@ -20,22 +21,41 @@
   <button onclick="showAd()">Watch Ad for +50 Coins</button>
   
   <p id="coins">Your Coins: 0</p>
-
-  <script>
+<script>
     let coins = 0;
-    function startQuiz() {
-      alert("Quiz starting! (More questions coming soon)");
-      coins += 10;
-      updateCoins();
-    }
-    function showAd() {
-      alert("Ad playing... +50 coins added!");
-      coins += 50;
-      updateCoins();
-    }
+
+    // Telegram Mini App init
+    Telegram.WebApp.ready();
+    Telegram.WebApp.expand();
+
     function updateCoins() {
-      document.getElementById('coins').innerText = 'Your Coins: ' + coins;
+        document.getElementById('coins').innerText = 'Your Coins: ' + coins;
     }
-  </script>
+
+    function startQuiz() {
+        alert("Quiz starting! (More questions coming soon)");
+        coins += 10;
+        updateCoins();
+    }
+
+    // Monetag Rewarded Ad function
+    function showRewardedAd() {
+        if (typeof show_10576545 === 'function') {
+            show_10576545()
+                .then(() => {
+                    coins += 50;
+                    updateCoins();
+                    alert("Ad watched! +50 Coins added! 💰");
+                })
+                .catch(() => {
+                    alert("Ad skipped or closed. No reward this time.");
+                });
+        } else {
+            alert("Ad is loading... Please wait a few seconds and try again.");
+        }
+    }
+
+    updateCoins(); // Show coins on page load
+</script>
 </body>
 </html>
