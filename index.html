@@ -56,6 +56,39 @@
     }
 
     updateCoins(); // Show coins on page load
+<script>
+    let coins = 0;
+
+    Telegram.WebApp.ready();
+    Telegram.WebApp.expand();
+
+    function updateCoins() {
+        document.getElementById('coins').innerText = 'Your Coins: ' + coins;
+    }
+
+    function startQuiz() {
+        alert("Quiz starting! (More questions coming soon)");
+        coins += 10;
+        updateCoins();
+    }
+
+    function showRewardedAd() {
+        if (typeof show_10576545 === 'function') {
+            show_10576545()
+                .then(() => {
+                    coins += 50;
+                    updateCoins();
+                    alert("Ad watched! +50 Coins added! 💰");
+                })
+                .catch(() => {
+                    alert("Ad skipped or closed. No reward this time.");
+                });
+        } else {
+            alert("SDK loading... Try again in 10 seconds.");
+        }
+    }
+
+    updateCoins();
 </script>
 </body>
 </html>
